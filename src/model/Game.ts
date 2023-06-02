@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { BoxGeometry } from "three";
 import { APP } from "../util/global";
 import Logger from "./Logger";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const INNER_WIDTH = window.innerWidth;
 const INNER_HEIGHT = window.innerHeight;
@@ -20,32 +21,46 @@ export default class Game {
   objects: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>[] = [];
 
   constructor() {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
-    const renderer = new THREE.WebGLRenderer();
-    this.logger.set("default", new Logger("sys"));
+    this.logger.set("default", new Logger("sys", "green"));
 
-    /* camera setting */
-    camera.position.z = 5;
-
-    renderer.setSize(INNER_WIDTH, INNER_HEIGHT);
-    this.logger.get("default")?.log("renderer set size");
-    APP.appendChild(renderer.domElement);
-    this.logger.get("default")?.log("append renderer dom element");
-
-    this.scene = scene;
-    this.camera = camera;
-    this.renderer = renderer;
+    this.#setupScene();
+    this.#setupCamera();
+    this.#setupRenderer();
 
     this.logger.get("default")?.log("Game is loaded");
   }
 
-  createObject() {
+  /* default initialize options */
+
+  #setupScene() {
+    const scene = new THREE.Scene();
+    this.scene = scene;
+  }
+
+  #setupCamera() {
+    const camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
+    camera.position.z = 5;
+    this.camera = camera;
+  }
+
+  #setupRenderer() {
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(INNER_WIDTH, INNER_HEIGHT);
+    this.logger.get("default")?.log("renderer set size");
+    APP.appendChild(renderer.domElement);
+    this.logger.get("default")?.log("append renderer dom element");
+    this.renderer = renderer;
+  }
+
+  /* util */
+
+  addObject() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     this.objects.push(cube);
     this.scene.add(cube);
+    this.logger.get("default")?.log("create object");
   }
 
   render() {

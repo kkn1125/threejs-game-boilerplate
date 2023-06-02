@@ -5,9 +5,18 @@ export default class Logger {
   prefix: string = "log";
   temp: string | null = null;
   enable: boolean = CONSOLE_ENABLE;
+  color: string = "#bada55";
 
-  constructor(prefix: string) {
+  constructor(prefix: string, color?: string) {
     prefix && (this.prefix = prefix);
+
+    if (color) {
+      if (color?.match(/[a-z]+/g)) {
+        this.color = color;
+      } else {
+        this.color = "#" + color;
+      }
+    }
   }
 
   alias(prefix: string) {
@@ -27,7 +36,7 @@ export default class Logger {
           ...contents,
           format(timestamp, "[⏱️YYYY-MM-dd HH:mm:ss.SSS]"),
         ].join(" "),
-        "font-weight: bold; color: #bada55"
+        `font-weight: bold; color: ${this.color}`
       );
   }
 }

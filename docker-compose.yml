@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+
+  api:
+    container_name: api
+    image: kkn1125/individual:mapi-0.1.7
+    build: .
+    ports:
+      - 5000:5000
+    volumes:
+      - /home/ubuntu/api/:/home/ubuntu/api/
+    command: npm run aws
+    networks:
+      - medience
+  # certbot:
+  #   container_name: certbot
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./certbot-etc:/etc/letsencrypt
+  #     - ./web:/var/lib/letsencrypt
+  #   command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email chaplet01@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d apitest.ander-private.kro.kr
+
+networks:
+  medience:
+    name: medience
+    driver: bridge
